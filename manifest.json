@@ -5,7 +5,9 @@
     "description": "Archive your clipboard, links, pages, and more!",
     "permissions": [
       "activeTab",  
-      "storage"
+      "storage",
+      "clipboardWrite",
+      "clipboardRead"
     ],
     "background": {
       "service_worker": "background.js"

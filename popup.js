@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function(){
     // get references to DOM elements
     const fullHistory = document.getElementById('fullHistory');
     const searchInput = document.getElementById('searchInput');
-    const clearButton = document.getElementById("clearButton");
+    const clearAllButton = document.getElementById("clearAllButton");
 
     // displays all clipboard items
-    function displayAllClips(clips) {
+    function displayClips(clips) {
         // clear current content for new display
         fullHistory.innerHTML = '';
 
@@ -42,7 +42,68 @@ document.addEventListener('DOMContentLoaded', function(){
         });
 
         // set up event handlers for copy button
+        document.querySelectorAll('.copyButton').forEach(button => {
+            button.addEventListener('click', function() {
+                // get the index of each clip to copy
+                const index = this.getAttribute('data-index');
+                // write the clip text to system clipboard
+                navigator.clipboard.writeText(clips[index].text);
+                // flash "Copied!" message when successful
+                this.textContext = 'Copied!';
+                // reset the button text after 1 second
+                setTimeout(() => this.textContext = 'Copy', 1000);
+            });
+        });
 
+        // set up event handlers for delete button
+        document.querySelectorAll('.deleteButton').forEach(button => {
+            button.addEventListener('click', function() {
+                // get the index of the clip to delete
+                const index = this.getAttribute('data-index');
+                // remove button from the array
+                clips.splice(index, 1);
+                // update stored clips and refresh display
+                chrome.storage.local.set({ clips }, () => {
+                    displayClips(clips);
+                });
+            });
+        });
     }
 
-})
+
+    // load clips from Chrome's storage and display them
+    function loadClips() {
+        chrome.storage.local.get(['clips'], function(result) {
+            // get the clips array or default to empty array
+            const clips = result.clips || [];
+            displayClips(clips);
+        });
+    }
+
+    // Filter clips with search 
+    searchInput.addEventListener('input', function() {
+        // convert search term to lowercase
+        const searchTerm = this.ariaValueMax.toLowerCase();
+        chrome.storage.local.get(['clips'], function(result) {
+            const clips = result.clips || [];
+            // filter clips to only those containing search term
+            const filteredClips = clips.filter(clip =>
+                clip.text.toLowerCase().includes(searchTerm)
+            );
+            displayClips(filteredClips);
+        });
+    });
+
+    // add event listener for clear button
+    clearAllButton.addEventListener('click', function() {
+        // show confirmation before clearing
+        if (confirm('Are you sure you want to clear the clipboard history?')) {
+            chrome.storage.local.set({ clips: [] }, () => {
+                displayClips([]);
+            });
+        }
+    });
+
+    loadClips();
+
+});

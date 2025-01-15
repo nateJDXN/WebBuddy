@@ -78,17 +78,20 @@ document.addEventListener('DOMContentLoaded', function(){
             const clips = result.clips || [];
             displayClips(clips);
         });
+
+        console.log("Clips loaded");
     }
 
     // Filter clips with search 
     searchInput.addEventListener('input', function() {
+
         // convert search term to lowercase
-        const searchTerm = this.ariaValueMax.toLowerCase();
+        const searchTerm = this.value?.toLowerCase();
         chrome.storage.local.get(['clips'], function(result) {
             const clips = result.clips || [];
             // filter clips to only those containing search term
             const filteredClips = clips.filter(clip =>
-                clip.text.toLowerCase().includes(searchTerm)
+                clip.text?.toLowerCase().includes(searchTerm)
             );
             displayClips(filteredClips);
         });
@@ -96,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // add event listener for clear button
     clearAllButton.addEventListener('click', function() {
+        console.log("clear button clicked");
         // show confirmation before clearing
         if (confirm('Are you sure you want to clear the clipboard history?')) {
             chrome.storage.local.set({ clips: [] }, () => {

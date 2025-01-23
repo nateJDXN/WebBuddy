@@ -30,6 +30,7 @@ function saveClip(text) {
 
 // listen for messages from the content script
 chrome.runtime.onMessage.addListener(function(request) {
+    console.log("listening...")
     if (request.text) {
         saveClip(request.text);
     }

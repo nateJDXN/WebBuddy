@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function displayClips(clips) {
         // clear current content for new display
         fullHistory.innerHTML = '';
+        console.log("history cleared");
 
         // show message if there are no clips to show
         if (!clips || clips.length === 0) {

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
             // create the HTML for each clip
             clipElement.innerHTML = `
-                <div class="clip-content">
+                <div class="clip-content box">
                     <p>${clip.text}</p>
                     <span class="timestamp">${timestamp}</span>
                 </div>

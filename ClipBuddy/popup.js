@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 </div>
                 <div class="clip-actions">
                     <button class="copyButton" data-index="${index}">Copy</button>
-                    <button class="deleteButton> data-index="${index}">Delete</button>
+                    <button class="deleteButton" data-index="${index}">Delete</button>
                 </div>
             `;
 
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function(){
         // set up event handlers for delete button
         document.querySelectorAll('.deleteButton').forEach(button => {
             button.addEventListener('click', function() {
+                console.log("Delete button clicked");
                 // get the index of the clip to delete
                 const index = this.getAttribute('data-index');
                 // remove button from the array
